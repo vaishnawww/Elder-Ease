@@ -1,54 +1,55 @@
 import 'package:flutter/material.dart';
 import 'mock_db.dart';
 
-class ServiceProviderRegistrationPage extends StatefulWidget {
-  const ServiceProviderRegistrationPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
   @override
-  State<ServiceProviderRegistrationPage> createState() => _ServiceProviderRegistrationPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _ServiceProviderRegistrationPageState extends State<ServiceProviderRegistrationPage> {
-  final _name = TextEditingController();
-  final _service = TextEditingController();
-  final _phone = TextEditingController();
-  final _password = TextEditingController();
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  void _register() {
-    final name = _name.text.trim();
-    final service = _service.text.trim();
-    final phone = _phone.text.trim();
-    final pass = _password.text;
+  void _login() {
+    final phone = phoneController.text.trim();
+    final password = passwordController.text;
 
-    if (name.isEmpty || service.isEmpty || phone.isEmpty || pass.isEmpty) {
-      _show("Please fill all fields");
-      return;
-    }
-    if (phone.length < 10) {
-      _show("Enter valid phone number");
-      return;
-    }
-    if (pass.length < 4) {
-      _show("Password too short (min 4)");
+    if (phone.isEmpty || password.isEmpty) {
+      _showMsg("Please enter phone and password");
       return;
     }
 
-    final ok = MockDB.registerUser(phone: phone, password: pass, role: 'service_provider', name: "$name ($service)");
-    if (!ok) {
-      _show("Phone already registered. Try login.");
+    final user = MockDB.getUser(phone);
+    if (user == null) {
+      _showMsg("User not found. Please register first.");
       return;
     }
 
-    _show("Provider registered successfully. Please login.");
-    Navigator.pop(context);
+    if (user['password'] != password) {
+      _showMsg("Incorrect password");
+      return;
+    }
+
+    final role = user['role'];
+    if (role == 'user') {
+      Navigator.pushReplacementNamed(context, '/user_home', arguments: phone);
+    } else if (role == 'service_provider') {
+      Navigator.pushReplacementNamed(context, '/provider_home', arguments: phone);
+    } else {
+      _showMsg("Unknown role");
+    }
   }
 
-  void _show(String msg) => ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(msg),
-      backgroundColor: Colors.black,
-      behavior: SnackBarBehavior.floating,
-    ),
-  );
+  void _showMsg(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        backgroundColor: Colors.black,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +70,7 @@ class _ServiceProviderRegistrationPageState extends State<ServiceProviderRegistr
               const SizedBox(height: 40),
               
               const Text(
-                "Register as Provider",
+                "Welcome Back",
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w300,
@@ -78,59 +79,6 @@ class _ServiceProviderRegistrationPageState extends State<ServiceProviderRegistr
                 ),
               ),
               const SizedBox(height: 40),
-              
-              // Name field
-              const Text(
-                "FULL NAME",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black54,
-                  letterSpacing: 1.5,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _name,
-                style: const TextStyle(color: Colors.black),
-                cursorColor: Colors.black,
-                decoration: const InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32),
-              
-              // Service field
-              const Text(
-                "SERVICE TYPE",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black54,
-                  letterSpacing: 1.5,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _service,
-                style: const TextStyle(color: Colors.black),
-                cursorColor: Colors.black,
-                decoration: const InputDecoration(
-                  hintText: "e.g., Plumbing, Nursing, Cleaning",
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32),
               
               // Phone field
               const Text(
@@ -144,7 +92,7 @@ class _ServiceProviderRegistrationPageState extends State<ServiceProviderRegistr
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: _phone,
+                controller: phoneController,
                 keyboardType: TextInputType.phone,
                 style: const TextStyle(color: Colors.black),
                 cursorColor: Colors.black,
@@ -171,7 +119,7 @@ class _ServiceProviderRegistrationPageState extends State<ServiceProviderRegistr
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: _password,
+                controller: passwordController,
                 obscureText: true,
                 style: const TextStyle(color: Colors.black),
                 cursorColor: Colors.black,
@@ -186,11 +134,11 @@ class _ServiceProviderRegistrationPageState extends State<ServiceProviderRegistr
               ),
               const SizedBox(height: 40),
               
-              // Register button
+              // Login button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _register,
+                  onPressed: _login,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                     foregroundColor: Colors.white,
@@ -201,7 +149,7 @@ class _ServiceProviderRegistrationPageState extends State<ServiceProviderRegistr
                     elevation: 0,
                   ),
                   child: const Text(
-                    "REGISTER",
+                    "LOGIN",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -210,8 +158,49 @@ class _ServiceProviderRegistrationPageState extends State<ServiceProviderRegistr
                   ),
                 ),
               ),
+              const SizedBox(height: 32),
               
+              // Footer links
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pushNamed(context, '/user_register'),
+                    child: const Text(
+                      "REGISTER AS USER",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pushNamed(context, '/provider_register'),
+                    child: const Text(
+                      "REGISTER AS PROVIDER",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const Spacer(),
+              
+              // Test accounts info
+              const Padding(
+                padding: EdgeInsets.only(bottom: 40),
+                child: Text(
+                  "Test accounts:\nUser: 9876543210 / user123\nProvider: 9998887777 / provider123",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12, color: Colors.black54),
+                ),
+              ),
             ],
           ),
         ),

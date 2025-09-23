@@ -12,87 +12,114 @@ class LoginRegisterPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
           child: Column(
             children: [
-              const SizedBox(height: 80),
+              const SizedBox(height: 60),
               
-              // App Title (big, bold, elder-friendly)
+              // App Title
               const Text(
                 "ElderEase",
                 style: TextStyle(
-                  fontSize: 48, // bigger
-                  fontWeight: FontWeight.bold, // bolder
+                  fontSize: 42,
+                  fontWeight: FontWeight.w300,
                   color: Colors.black,
-                  letterSpacing: 1.2,
+                  letterSpacing: 1.5,
                 ),
               ),
-              const SizedBox(height: 60),
+              const SizedBox(height: 40),
               
               // Minimal divider
               Container(
-                width: 60,
-                height: 2,
+                width: 40,
+                height: 1,
                 color: Colors.black,
               ),
               const SizedBox(height: 40),
               
-              // Login/Register Title
+              // Welcome Title
               const Text(
-                "Login / Register",
+                "Welcome",
                 style: TextStyle(
-                  fontSize: 32, // larger
+                  fontSize: 28,
                   color: Colors.black,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w400,
                   letterSpacing: 0.8,
                 ),
               ),
-              const SizedBox(height: 80),
+              const SizedBox(height: 60),
+              
+              // Login Button
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/login');
+                  },
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    side: const BorderSide(width: 1.5, color: Colors.black),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                  ),
+                  child: const Text(
+                    "LOGIN",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               
               // Register as User Button
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
-                    // Navigate to User Registration Page
+                    Navigator.pushNamed(context, '/user_register');
                   },
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 24), // bigger button
-                    side: const BorderSide(width: 2, color: Colors.black),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    side: const BorderSide(width: 1.5, color: Colors.black),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8), // slightly rounded for comfort
+                      borderRadius: BorderRadius.circular(0),
                     ),
                   ),
                   child: const Text(
-                    "Register as User",
+                    "REGISTER AS USER",
                     style: TextStyle(
-                      fontSize: 22, // bigger text
+                      fontSize: 18,
                       color: Colors.black,
-                      fontWeight: FontWeight.w600, // medium-bold
+                      fontWeight: FontWeight.w400,
                       letterSpacing: 0.5,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 20),
               
               // Register as Service Provider Button
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
-                    // Navigate to Service Provider Registration Page
+                    Navigator.pushNamed(context, '/provider_register');
                   },
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 24),
-                    side: const BorderSide(width: 2, color: Colors.black),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    side: const BorderSide(width: 1.5, color: Colors.black),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(0),
                     ),
                   ),
                   child: const Text(
-                    "Register as Service Provider",
+                    "REGISTER AS PROVIDER",
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: 18,
                       color: Colors.black,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w400,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -100,25 +127,6 @@ class LoginRegisterPage extends StatelessWidget {
               ),
               
               const Spacer(),
-              
-              // Already have account? Login
-              TextButton(
-                onPressed: () {
-                  // Navigate to Login Page
-                },
-                child: const Text(
-                  "Already have an account? Login",
-                  style: TextStyle(
-                    fontSize: 20, // bigger and easier
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                    decoration: TextDecoration.underline,
-                    decorationThickness: 1.2,
-                  ),
-                ),
-              ),
-              
-              const SizedBox(height: 50),
             ],
           ),
         ),
